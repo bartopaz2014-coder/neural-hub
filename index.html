@@ -143,14 +143,17 @@ document.querySelectorAll('#tools .card').forEach(card=>{
 card.style.display=card.innerText.toLowerCase().includes(q)||card.dataset.search.includes(q)?'block':'none';
 });
 }
+
 function addChat(text,type){
-let box=document.createElement('div');
-box.className='msg '+type;
-box.textContent=text;
-let chat=document.getElementById('chatbox');
-chat.appendChild(box);
-chat.scrollTop=chat.scrollHeight;
+  let box=document.createElement('div');
+  box.className='msg '+type;
+  box.textContent=text;
+  let chat=document.getElementById('chatbox');
+  chat.appendChild(box);
+  chat.scrollTop=chat.scrollHeight;
+  return box;
 }
+
 function chatAnswer(t){
 let q=t.toLowerCase();
 if(q.includes('hello')||q.includes('hi'))return 'Hello! Welcome to NEURAL HUB. What can I help you with?';
@@ -160,14 +163,42 @@ if(q.includes('idea'))return 'Creative idea: Imagine a world where everyone can 
 if(q.includes('help'))return 'I can help with gaming ideas, YouTube topics and creative inspiration. Tell me what you are working on!';
 return 'Thanks for your message! This is the NEURAL HUB free demo assistant. My answers are limited because I am not connected to a real AI model yet.';
 }
-function sendChat(){
-let input=document.getElementById('chatinput');
-let t=input.value.trim();
-if(!t)return;
-addChat(t,'user');
-input.value='';
-setTimeout(()=>addChat(chatAnswer(t),'bot'),250);
+
+
+async function sendChat(){
+  let input=document.getElementById('chatinput');
+  let t=input.value.trim();
+  if(!t)return;
+
+  addChat(t,'user');
+  input.value='';
+
+  let button=document.querySelector('.chatinput button');
+  button.disabled=true;
+
+  let loading=addChat('Thinking...','bot');
+
+  try{
+    let response=await fetch(
+      'https://neural-hub-ai.bar-topaz2014.workers.dev',
+      {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({message:t})
+      }
+    );
+
+    let data=await response.json();
+
+    loading.textContent=data.answer || data.error || 'No answer received.';
+  }catch(error){
+    loading.textContent='Connection error. Please try again.';
+  }finally{
+    button.disabled=false;
+  }
 }
+
+
 function youtubeIdeas(){
 let t=document.getElementById('ytTopic').value.trim();
 if(!t){document.getElementById('ytResult').textContent='Please enter a topic first.';return}
