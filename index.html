@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURAL HUB</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080b16;color:#f5f6ff;font-family:Arial,sans-serif}
+header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #252b43}
+.logo{font-size:25px;font-weight:bold;letter-spacing:2px;color:#9c8cff}
+nav a{color:#c5c8df;text-decoration:none;margin-left:20px}
+.hero{text-align:center;padding:100px 20px 65px}
+.hero h1{font-size:clamp(40px,8vw,76px);margin:0}
+.hero h1 span{color:#9c8cff}
+.hero p{color:#aeb4d0;font-size:18px}
+.search{margin:30px auto;max-width:550px;display:flex;gap:8px}
+input{flex:1;min-width:0;padding:15px;border-radius:12px;border:1px solid #343b5b;background:#151a2c;color:white}
+button{padding:14px 20px;border:0;border-radius:12px;background:#8d7cff;color:white;font-weight:bold;cursor:pointer}
+main{max-width:1100px;margin:auto;padding:20px}
+h2{margin-top:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:#12182a;border:1px solid #29314e;border-radius:18px;padding:24px}
+.card h3{color:#a99cff}
+.card p{color:#aeb4d0;line-height:1.5}
+.card a{color:#a99cff}
+footer{text-align:center;padding:40px;color:#777f9e}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">NEURAL HUB</div>
+<nav><a href="#tools">Tools</a><a href="#about">About</a></nav>
+</header>
+<section class="hero">
+<h1>Welcome to <span>NEURAL HUB</span></h1>
+<p>Your digital universe. AI, gaming and creativity in one place.</p>
+<div class="search">
+<input id="search" placeholder="Search your next tool...">
+<button onclick="searchTools()">Search</button>
+</div>
+</section>
+<main>
+<h2 id="tools">Explore the Hub</h2>
+<div class="grid" id="cards">
+<div class="card"><h3>🤖 AI Chat</h3><p>A place to explore ideas and get help with questions.</p><a href="#about">Explore</a></div>
+<div class="card"><h3>▶ YouTube Studio</h3><p>Plan videos, brainstorm titles and grow your channel.</p><a href="#about">Explore</a></div>
+<div class="card"><h3>🎮 Gaming AI</h3><p>Discover gaming tips, ideas and creative strategies.</p><a href="#about">Explore</a></div>
+<div class="card"><h3>🎨 Creator Lab</h3><p>Build concepts for images, stories and creative projects.</p><a href="#about">Explore</a></div>
+</div>
+<section id="about">
+<h2>One Hub. Endless Ideas.</h2>
+<p style="color:#aeb4d0">NEURAL HUB brings your digital creativity together in one place.</p>
+</section>
+</main>
+<footer>NEURAL HUB © 2026</footer>
+<script>
+function searchTools(){
+const q=document.getElementById('search').value.toLowerCase();
+document.querySelectorAll('.card').forEach(card=>{
+card.style.display=card.innerText.toLowerCase().includes(q)?'block':'none';
+});
+}
+</script>
+</body>
+</html>
