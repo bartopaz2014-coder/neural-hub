@@ -165,38 +165,59 @@ return 'Thanks for your message! This is the NEURAL HUB free demo assistant. My 
 }
 
 
+
+let chatHistory = [];
+
 async function sendChat(){
-  let input=document.getElementById('chatinput');
-  let t=input.value.trim();
-  if(!t)return;
+  let input = document.getElementById('chatinput');
+  let t = input.value.trim();
+  if(!t) return;
 
-  addChat(t,'user');
-  input.value='';
+  addChat(t, 'user');
+  input.value = '';
 
-  let button=document.querySelector('.chatinput button');
-  button.disabled=true;
+  let button = document.querySelector('.chatinput button');
+  button.disabled = true;
 
-  let loading=addChat('Thinking...','bot');
+  let loading = addChat('Thinking...', 'bot');
 
-  try{
-    let response=await fetch(
+  try {
+    let response = await fetch(
       'https://neural-hub-ai.bar-topaz2014.workers.dev',
       {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({message:t})
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: t,
+          history: chatHistory
+        })
       }
     );
 
-    let data=await response.json();
+    let data = await response.json();
 
-    loading.textContent=data.answer || data.error || 'No answer received.';
-  }catch(error){
-    loading.textContent='Connection error. Please try again.';
-  }finally{
-    button.disabled=false;
+    if (!response.ok || data.error) {
+      loading.textContent = data.error || 'Something went wrong.';
+      return;
+    }
+
+    let answer = data.answer || 'No answer received.';
+    loading.textContent = answer;
+
+    chatHistory.push(
+      {role: 'user', text: t},
+      {role: 'model', text: answer}
+    );
+
+    chatHistory = chatHistory.slice(-12);
+
+  } catch(error) {
+    loading.textContent = 'Connection error. Please try again.';
+  } finally {
+    button.disabled = false;
   }
 }
+
 
 
 function youtubeIdeas(){
