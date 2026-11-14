@@ -3,99 +3,188 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEURAL HUB AI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEURAL HUB</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090b14;color:#f5f5ff;font-family:Arial,sans-serif}
-.app{display:flex;height:100vh}
-.sidebar{width:245px;background:#101321;border-right:1px solid #252940;padding:22px;display:flex;flex-direction:column}
-.logo{font-size:23px;font-weight:bold;color:#a797ff;margin-bottom:35px}
-.new{background:#24213c;color:white;border:1px solid #514879;padding:13px;border-radius:12px;cursor:pointer}
-.sideinfo{margin-top:auto;color:#8e93ac;font-size:12px;line-height:1.6}
-.main{flex:1;display:flex;flex-direction:column;min-width:0}
-.top{padding:19px 25px;border-bottom:1px solid #252940;font-weight:bold}
-.chat{flex:1;overflow:auto;padding:30px 20px}
-.welcome{text-align:center;margin:12vh auto 30px;max-width:550px}
-.welcome h1{font-size:38px;margin-bottom:10px}
-.welcome h1 span{color:#a797ff}
-.welcome p{color:#9299b6}
-.messages{max-width:760px;margin:auto}
-.message{padding:16px 19px;border-radius:15px;margin:14px 0;line-height:1.6;white-space:pre-wrap}
-.user{background:#272440;margin-left:12%;border:1px solid #49416d}
-.bot{background:#151b2b;margin-right:12%;border:1px solid #29334e}
-.label{font-size:11px;color:#a797ff;margin-bottom:6px}
-.composer{padding:15px 20px 25px}
-.inputbox{max-width:760px;margin:auto;display:flex;gap:10px;background:#151a2a;border:1px solid #343b58;border-radius:16px;padding:9px}
-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:white;padding:10px;font-size:15px}
-button{background:#8978fa;color:white;border:0;border-radius:11px;padding:12px 18px;cursor:pointer;font-weight:bold}
+body{margin:0;background:#090b15;color:#f5f5ff;font-family:Arial,sans-serif}
+header{height:72px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;background:#101426;border-bottom:1px solid #292e49}
+.logo{font-size:23px;font-weight:bold;color:#a995ff;letter-spacing:2px}
+header button,.btn{background:#8977f8;color:white;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;font-weight:bold}
+main{max-width:1100px;margin:auto;padding:35px 22px}
+.page{display:none}
+.page.active{display:block}
+.hero{text-align:center;padding:55px 10px 35px}
+h1{font-size:clamp(34px,6vw,58px);margin:0 0 15px}
+h1 span{color:#a995ff}
+p{color:#aab0ca;line-height:1.6}
+.search{display:flex;max-width:570px;margin:28px auto;gap:9px}
+input,textarea,select{background:#151a2c;border:1px solid #343b5a;border-radius:11px;padding:14px;color:white;width:100%;font:inherit}
+textarea{min-height:100px;resize:vertical}
+.search input{flex:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:#13192b;border:1px solid #2c3451;border-radius:17px;padding:23px;transition:.2s}
+.card:hover{transform:translateY(-4px);border-color:#8977f8}
+.card h3{color:#b5a5ff}
+.card p{min-height:50px}
+.card button{background:#292444;color:white;border:1px solid #514477;padding:11px 17px;border-radius:9px;cursor:pointer}
+.toolhead{margin-bottom:25px}
+.back{background:#24243c;color:white;border:1px solid #494568;padding:10px 15px;border-radius:9px;cursor:pointer;margin-bottom:25px}
+.panel{background:#13192b;border:1px solid #2c3451;padding:24px;border-radius:17px;max-width:750px}
+.result{white-space:pre-wrap;background:#0d1221;border:1px solid #303753;border-radius:12px;padding:18px;margin-top:18px;line-height:1.7;color:#e2ddff;min-height:50px}
+.chatbox{height:350px;overflow:auto;background:#0d1221;padding:15px;border-radius:12px;margin:15px 0}
+.msg{padding:12px 15px;border-radius:12px;margin:10px 0;white-space:pre-wrap;line-height:1.5}
+.user{background:#30284d;margin-left:12%}
+.bot{background:#192238;margin-right:12%}
+.chatinput{display:flex;gap:8px}
+.chatinput button{flex-shrink:0}
+footer{text-align:center;color:#737b9c;padding:40px}
+.small{font-size:12px;color:#858daa}
 button:hover{opacity:.85}
-.hint{text-align:center;color:#777f9e;font-size:11px;margin-top:12px}
-@media(max-width:650px){.sidebar{width:75px;padding:12px}.logo{font-size:12px;overflow:hidden}.sideinfo{display:none}.new{font-size:10px;padding:8px}.welcome h1{font-size:29px}}
+@media(max-width:550px){header{padding:0 15px}.logo{font-size:18px}.chatinput{flex-direction:column}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="sidebar">
+<header>
 <div class="logo">NEURAL HUB</div>
-<button class="new" onclick="newChat()">+ New Chat</button>
-<div class="sideinfo">NEURAL HUB AI<br>Free Demo Version<br>Made for creators</div>
-</aside>
-<main class="main">
-<div class="top">✦ NEURAL AI <span style="color:#999"> / Chat</span></div>
-<div class="chat" id="chat">
-<div class="welcome" id="welcome">
-<h1>Hello, <span>Creator.</span></h1>
-<p>What would you like to explore today?</p>
+<button onclick="goHome()">⌂ Home</button>
+</header>
+<main>
+
+<section id="home" class="page active">
+<div class="hero">
+<h1>Welcome to <span>NEURAL HUB</span></h1>
+<p>Your digital universe for AI, gaming and creativity.</p>
+<div class="search">
+<input id="search" placeholder="Search for a tool..." oninput="filterTools()">
+<button onclick="filterTools()">Search</button>
 </div>
-<div class="messages" id="messages"></div>
 </div>
-<div class="composer">
-<div class="inputbox">
-<input id="prompt" placeholder="Message NEURAL AI..." onkeydown="if(event.key==='Enter')sendMessage()">
-<button onclick="sendMessage()">Send ↑</button>
+<h2>Explore your tools</h2>
+<div class="grid" id="tools">
+<div class="card" data-search="ai chat chatbot artificial intelligence">
+<h3>🤖 AI Chat</h3><p>Chat with the NEURAL HUB demo assistant.</p>
+<button onclick="openTool('chat')">Explore →</button></div>
+<div class="card" data-search="youtube video titles ideas creator">
+<h3>🎬 YouTube Studio</h3><p>Generate video ideas and catchy titles.</p>
+<button onclick="openTool('youtube')">Explore →</button></div>
+<div class="card" data-search="gaming roblox games tips">
+<h3>🎮 Gaming AI</h3><p>Get gaming ideas and helpful tips.</p>
+<button onclick="openTool('gaming')">Explore →</button></div>
+<div class="card" data-search="creator lab prompts art image creative">
+<h3>🎨 Creator Lab</h3><p>Create prompts for your next creative project.</p>
+<button onclick="openTool('creator')">Explore →</button></div>
 </div>
-<div class="hint">NEURAL HUB DEMO · Responses are generated locally</div>
+</section>
+
+<section id="chat" class="page">
+<button class="back" onclick="goHome()">← Back to Home</button>
+<div class="toolhead"><h1>🤖 <span>AI Chat</span></h1><p>Talk with the NEURAL HUB demo assistant.</p></div>
+<div class="panel">
+<div class="chatbox" id="chatbox">
+<div class="msg bot">Hello! Welcome to NEURAL HUB. What would you like to explore?</div>
 </div>
+<div class="chatinput">
+<input id="chatinput" placeholder="Write a message..." onkeydown="if(event.key==='Enter')sendChat()">
+<button class="btn" onclick="sendChat()">Send ↑</button>
+</div>
+<p class="small">Free demo mode · Answers are generated locally, not by a real AI model.</p>
+</div>
+</section>
+
+<section id="youtube" class="page">
+<button class="back" onclick="goHome()">← Back to Home</button>
+<h1>🎬 <span>YouTube Studio</span></h1>
+<p>Generate video ideas for your channel.</p>
+<div class="panel">
+<label>What is your video about?</label>
+<input id="ytTopic" placeholder="Example: Roblox, facts, gaming...">
+<br><br><button class="btn" onclick="youtubeIdeas()">Generate ideas</button>
+<div class="result" id="ytResult">Your ideas will appear here.</div>
+</div>
+</section>
+
+<section id="gaming" class="page">
+<button class="back" onclick="goHome()">← Back to Home</button>
+<h1>🎮 <span>Gaming AI</span></h1>
+<p>Choose a game and get some ideas.</p>
+<div class="panel">
+<input id="gameName" placeholder="Enter a game name...">
+<br><br><button class="btn" onclick="gameIdeas()">Get gaming ideas</button>
+<div class="result" id="gameResult">Your gaming ideas will appear here.</div>
+</div>
+</section>
+
+<section id="creator" class="page">
+<button class="back" onclick="goHome()">← Back to Home</button>
+<h1>🎨 <span>Creator Lab</span></h1>
+<p>Generate creative prompts for your next project.</p>
+<div class="panel">
+<input id="creatorTopic" placeholder="Example: A futuristic city at night...">
+<br><br><button class="btn" onclick="createPrompt()">Create prompt</button>
+<div class="result" id="creatorResult">Your prompt will appear here.</div>
+</div>
+</section>
+
 </main>
-</div>
+<footer>NEURAL HUB © 2026 · Free Demo</footer>
+
 <script>
-function addMessage(text,type){
-const messages=document.getElementById('messages');
-const box=document.createElement('div');
-box.className='message '+type;
-const label=document.createElement('div');
-label.className='label';
-label.textContent=type==='user'?'YOU':'NEURAL AI';
-const content=document.createElement('div');
-content.textContent=text;
-box.append(label,content);
-messages.appendChild(box);
-document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight;
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo(0,0);
 }
-function answer(text){
-const t=text.toLowerCase();
-if(t.includes('hello')||t.includes('hi')||t.includes('hey'))return 'Hello! Welcome to NEURAL HUB. What can I help you with today?';
-if(t.includes('youtube')||t.includes('video'))return 'Here are three video ideas:\n1. What if the internet disappeared for 24 hours?\n2. 5 things you never noticed in your favorite game\n3. What would happen if the Moon disappeared?';
-if(t.includes('game')||t.includes('gaming')||t.includes('roblox'))return 'Gaming mode activated! Tell me which game you play and I can suggest challenges, strategies and content ideas.';
-if(t.includes('idea'))return 'Try this creative idea: imagine a world where every person wakes up with a different superpower. What happens next?';
-if(t.includes('help'))return 'Of course! I can help with brainstorming, YouTube ideas, gaming topics and creative projects. What are you working on?';
-if(t.includes('who are you'))return 'I am NEURAL AI, the demo assistant inside NEURAL HUB.';
-return 'Interesting question! I am currently running in free demo mode, so my answers are limited. Try asking me for YouTube ideas, gaming tips or creative inspiration.';
+function goHome(){showPage('home')}
+function openTool(id){showPage(id)}
+function filterTools(){
+let q=document.getElementById('search').value.toLowerCase().trim();
+document.querySelectorAll('#tools .card').forEach(card=>{
+card.style.display=card.innerText.toLowerCase().includes(q)||card.dataset.search.includes(q)?'block':'none';
+});
 }
-function sendMessage(){
-const input=document.getElementById('prompt');
-const text=input.value.trim();
-if(!text)return;
-document.getElementById('welcome').style.display='none';
-addMessage(text,'user');
+function addChat(text,type){
+let box=document.createElement('div');
+box.className='msg '+type;
+box.textContent=text;
+let chat=document.getElementById('chatbox');
+chat.appendChild(box);
+chat.scrollTop=chat.scrollHeight;
+}
+function chatAnswer(t){
+let q=t.toLowerCase();
+if(q.includes('hello')||q.includes('hi'))return 'Hello! Welcome to NEURAL HUB. What can I help you with?';
+if(q.includes('youtube')||q.includes('video'))return 'Here are some video ideas:\n1. What if the internet disappeared?\n2. 5 secrets in your favorite game\n3. What happens if the Moon disappears?';
+if(q.includes('roblox')||q.includes('game'))return 'Gaming mode! Try a new challenge, explore a game you have not played before, or create a video about your best moments.';
+if(q.includes('idea'))return 'Creative idea: Imagine a world where everyone can pause time for 10 seconds. What would happen?';
+if(q.includes('help'))return 'I can help with gaming ideas, YouTube topics and creative inspiration. Tell me what you are working on!';
+return 'Thanks for your message! This is the NEURAL HUB free demo assistant. My answers are limited because I am not connected to a real AI model yet.';
+}
+function sendChat(){
+let input=document.getElementById('chatinput');
+let t=input.value.trim();
+if(!t)return;
+addChat(t,'user');
 input.value='';
-setTimeout(()=>addMessage(answer(text),'bot'),350);
+setTimeout(()=>addChat(chatAnswer(t),'bot'),250);
 }
-function newChat(){
-document.getElementById('messages').innerHTML='';
-document.getElementById('welcome').style.display='block';
-document.getElementById('prompt').value='';
+function youtubeIdeas(){
+let t=document.getElementById('ytTopic').value.trim();
+if(!t){document.getElementById('ytResult').textContent='Please enter a topic first.';return}
+document.getElementById('ytResult').textContent=
+'Video ideas about '+t+':\n\n1. What happens if '+t+' disappeared?\n2. 5 things you did not know about '+t+'\n3. The biggest mystery about '+t+'\n4. What if '+t+' changed forever?\n5. The truth about '+t;
+}
+function gameIdeas(){
+let t=document.getElementById('gameName').value.trim();
+if(!t){document.getElementById('gameResult').textContent='Please enter a game name first.';return}
+document.getElementById('gameResult').textContent=
+'Ideas for '+t+':\n\n1. Try a challenge without using your usual strategy.\n2. Make a beginner tips video.\n3. Explore something you have never tried.\n4. Create a funny moments compilation.\n5. Learn one new skill in the game.';
+}
+function createPrompt(){
+let t=document.getElementById('creatorTopic').value.trim();
+if(!t){document.getElementById('creatorResult').textContent='Please enter a topic first.';return}
+document.getElementById('creatorResult').textContent=
+'Creative prompt:\n\nCreate a detailed, cinematic scene of '+t+'. Use dramatic lighting, rich atmosphere, beautiful composition, detailed textures and professional visual storytelling.';
 }
 </script>
 </body>
