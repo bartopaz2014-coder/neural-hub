@@ -4,63 +4,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEURAL HUB</title>
+<title>NEURAL HUB AI</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b16;color:#f5f6ff;font-family:Arial,sans-serif}
-header{padding:25px 8%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #252b43}
-.logo{font-size:25px;font-weight:bold;letter-spacing:2px;color:#9c8cff}
-nav a{color:#c5c8df;text-decoration:none;margin-left:20px}
-.hero{text-align:center;padding:100px 20px 65px}
-.hero h1{font-size:clamp(40px,8vw,76px);margin:0}
-.hero h1 span{color:#9c8cff}
-.hero p{color:#aeb4d0;font-size:18px}
-.search{margin:30px auto;max-width:550px;display:flex;gap:8px}
-input{flex:1;min-width:0;padding:15px;border-radius:12px;border:1px solid #343b5b;background:#151a2c;color:white}
-button{padding:14px 20px;border:0;border-radius:12px;background:#8d7cff;color:white;font-weight:bold;cursor:pointer}
-main{max-width:1100px;margin:auto;padding:20px}
-h2{margin-top:40px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.card{background:#12182a;border:1px solid #29314e;border-radius:18px;padding:24px}
-.card h3{color:#a99cff}
-.card p{color:#aeb4d0;line-height:1.5}
-.card a{color:#a99cff}
-footer{text-align:center;padding:40px;color:#777f9e}
+body{margin:0;background:#090b14;color:#f5f5ff;font-family:Arial,sans-serif}
+.app{display:flex;height:100vh}
+.sidebar{width:245px;background:#101321;border-right:1px solid #252940;padding:22px;display:flex;flex-direction:column}
+.logo{font-size:23px;font-weight:bold;color:#a797ff;margin-bottom:35px}
+.new{background:#24213c;color:white;border:1px solid #514879;padding:13px;border-radius:12px;cursor:pointer}
+.sideinfo{margin-top:auto;color:#8e93ac;font-size:12px;line-height:1.6}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{padding:19px 25px;border-bottom:1px solid #252940;font-weight:bold}
+.chat{flex:1;overflow:auto;padding:30px 20px}
+.welcome{text-align:center;margin:12vh auto 30px;max-width:550px}
+.welcome h1{font-size:38px;margin-bottom:10px}
+.welcome h1 span{color:#a797ff}
+.welcome p{color:#9299b6}
+.messages{max-width:760px;margin:auto}
+.message{padding:16px 19px;border-radius:15px;margin:14px 0;line-height:1.6;white-space:pre-wrap}
+.user{background:#272440;margin-left:12%;border:1px solid #49416d}
+.bot{background:#151b2b;margin-right:12%;border:1px solid #29334e}
+.label{font-size:11px;color:#a797ff;margin-bottom:6px}
+.composer{padding:15px 20px 25px}
+.inputbox{max-width:760px;margin:auto;display:flex;gap:10px;background:#151a2a;border:1px solid #343b58;border-radius:16px;padding:9px}
+input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:white;padding:10px;font-size:15px}
+button{background:#8978fa;color:white;border:0;border-radius:11px;padding:12px 18px;cursor:pointer;font-weight:bold}
+button:hover{opacity:.85}
+.hint{text-align:center;color:#777f9e;font-size:11px;margin-top:12px}
+@media(max-width:650px){.sidebar{width:75px;padding:12px}.logo{font-size:12px;overflow:hidden}.sideinfo{display:none}.new{font-size:10px;padding:8px}.welcome h1{font-size:29px}}
 </style>
 </head>
 <body>
-<header>
+<div class="app">
+<aside class="sidebar">
 <div class="logo">NEURAL HUB</div>
-<nav><a href="#tools">Tools</a><a href="#about">About</a></nav>
-</header>
-<section class="hero">
-<h1>Welcome to <span>NEURAL HUB</span></h1>
-<p>Your digital universe. AI, gaming and creativity in one place.</p>
-<div class="search">
-<input id="search" placeholder="Search your next tool...">
-<button onclick="searchTools()">Search</button>
+<button class="new" onclick="newChat()">+ New Chat</button>
+<div class="sideinfo">NEURAL HUB AI<br>Free Demo Version<br>Made for creators</div>
+</aside>
+<main class="main">
+<div class="top">✦ NEURAL AI <span style="color:#999"> / Chat</span></div>
+<div class="chat" id="chat">
+<div class="welcome" id="welcome">
+<h1>Hello, <span>Creator.</span></h1>
+<p>What would you like to explore today?</p>
 </div>
-</section>
-<main>
-<h2 id="tools">Explore the Hub</h2>
-<div class="grid" id="cards">
-<div class="card"><h3>🤖 AI Chat</h3><p>A place to explore ideas and get help with questions.</p><a href="#about">Explore</a></div>
-<div class="card"><h3>▶ YouTube Studio</h3><p>Plan videos, brainstorm titles and grow your channel.</p><a href="#about">Explore</a></div>
-<div class="card"><h3>🎮 Gaming AI</h3><p>Discover gaming tips, ideas and creative strategies.</p><a href="#about">Explore</a></div>
-<div class="card"><h3>🎨 Creator Lab</h3><p>Build concepts for images, stories and creative projects.</p><a href="#about">Explore</a></div>
+<div class="messages" id="messages"></div>
 </div>
-<section id="about">
-<h2>One Hub. Endless Ideas.</h2>
-<p style="color:#aeb4d0">NEURAL HUB brings your digital creativity together in one place.</p>
-</section>
+<div class="composer">
+<div class="inputbox">
+<input id="prompt" placeholder="Message NEURAL AI..." onkeydown="if(event.key==='Enter')sendMessage()">
+<button onclick="sendMessage()">Send ↑</button>
+</div>
+<div class="hint">NEURAL HUB DEMO · Responses are generated locally</div>
+</div>
 </main>
-<footer>NEURAL HUB © 2026</footer>
+</div>
 <script>
-function searchTools(){
-const q=document.getElementById('search').value.toLowerCase();
-document.querySelectorAll('.card').forEach(card=>{
-card.style.display=card.innerText.toLowerCase().includes(q)?'block':'none';
-});
+function addMessage(text,type){
+const messages=document.getElementById('messages');
+const box=document.createElement('div');
+box.className='message '+type;
+const label=document.createElement('div');
+label.className='label';
+label.textContent=type==='user'?'YOU':'NEURAL AI';
+const content=document.createElement('div');
+content.textContent=text;
+box.append(label,content);
+messages.appendChild(box);
+document.getElementById('chat').scrollTop=document.getElementById('chat').scrollHeight;
+}
+function answer(text){
+const t=text.toLowerCase();
+if(t.includes('hello')||t.includes('hi')||t.includes('hey'))return 'Hello! Welcome to NEURAL HUB. What can I help you with today?';
+if(t.includes('youtube')||t.includes('video'))return 'Here are three video ideas:\n1. What if the internet disappeared for 24 hours?\n2. 5 things you never noticed in your favorite game\n3. What would happen if the Moon disappeared?';
+if(t.includes('game')||t.includes('gaming')||t.includes('roblox'))return 'Gaming mode activated! Tell me which game you play and I can suggest challenges, strategies and content ideas.';
+if(t.includes('idea'))return 'Try this creative idea: imagine a world where every person wakes up with a different superpower. What happens next?';
+if(t.includes('help'))return 'Of course! I can help with brainstorming, YouTube ideas, gaming topics and creative projects. What are you working on?';
+if(t.includes('who are you'))return 'I am NEURAL AI, the demo assistant inside NEURAL HUB.';
+return 'Interesting question! I am currently running in free demo mode, so my answers are limited. Try asking me for YouTube ideas, gaming tips or creative inspiration.';
+}
+function sendMessage(){
+const input=document.getElementById('prompt');
+const text=input.value.trim();
+if(!text)return;
+document.getElementById('welcome').style.display='none';
+addMessage(text,'user');
+input.value='';
+setTimeout(()=>addMessage(answer(text),'bot'),350);
+}
+function newChat(){
+document.getElementById('messages').innerHTML='';
+document.getElementById('welcome').style.display='block';
+document.getElementById('prompt').value='';
 }
 </script>
 </body>
