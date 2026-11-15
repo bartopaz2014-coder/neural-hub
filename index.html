@@ -349,17 +349,7 @@ function newChat(){
   createChat();
 }
 
-  chatHistory = [];
-  localStorage.removeItem('neuralHubChatHistory');
-
-  let chatbox = document.getElementById('chatbox');
-
-  chatbox.innerHTML = `
-    <div class="msg bot">
-      Hello! Welcome to NEURAL HUB. What would you like to explore?
-    </div>
-  `;
-}
+ 
 async function sendChat(){
   let input = document.getElementById('chatinput');
   let t = input.value.trim();
