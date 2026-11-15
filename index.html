@@ -166,7 +166,7 @@ return 'Thanks for your message! This is the NEURAL HUB free demo assistant. My 
 
 
 
-let chatHistory = [];
+let chatHistory = JSON.parse(localStorage.getItem('neuralHubChatHistory') || '[]');
 
 async function sendChat(){
   let input = document.getElementById('chatinput');
@@ -210,6 +210,7 @@ async function sendChat(){
     );
 
     chatHistory = chatHistory.slice(-12);
+    localStorage.setItem('neuralHubChatHistory', JSON.stringify(chatHistory));
 
   } catch(error) {
     loading.textContent = 'Connection error. Please try again.';
