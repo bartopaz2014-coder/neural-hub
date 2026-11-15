@@ -53,6 +53,43 @@ button:hover{opacity:.85}
   font-weight:bold;
   cursor:pointer;
 }
+  .chat-sidebar{
+  background:#0d1221;
+  border:1px solid #303753;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.chat-sidebar h3{
+  color:#b5a5ff;
+  margin:0 0 12px;
+}
+
+.chat-list-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  margin-top:8px;
+  background:#192238;
+  border-radius:9px;
+  cursor:pointer;
+}
+
+.chat-list-item:hover{
+  background:#30284d;
+}
+
+.chat-list-item button{
+  background:#493044;
+  color:white;
+  border:0;
+  border-radius:7px;
+  padding:7px 10px;
+  cursor:pointer;
+}
 @media(max-width:550px){header{padding:0 15px}.logo{font-size:18px}.chatinput{flex-direction:column}}
 </style>
 </head>
@@ -94,6 +131,10 @@ button:hover{opacity:.85}
 <div class="toolhead"><h1>🤖 <span>AI Chat</span></h1><p>Talk with the NEURAL HUB demo assistant.</p></div>
 <div class="panel">
 <button class="new-chat-btn" onclick="newChat()">
+  <div class="chat-sidebar">
+  <h3>💬 Your Chats</h3>
+  <div id="chatList"></div>
+</div>
   + New Chat
 </button>
 <div class="chatbox" id="chatbox">
@@ -180,15 +221,133 @@ return 'Thanks for your message! This is the NEURAL HUB free demo assistant. My 
 }
 
 
+let chats = JSON.parse(localStorage.getItem('neuralHubChats') || '[]');
 
-let chatHistory = JSON.parse(localStorage.getItem('neuralHubChatHistory') || '[]');
-function newChat(){
-  if(chatHistory.length > 0){
-    localStorage.setItem(
-      'neuralHubPreviousChat',
-      JSON.stringify(chatHistory)
-    );
+let activeChatId = localStorage.getItem('neuralHubActiveChatId');
+
+let chatHistory = JSON.parse(
+  localStorage.getItem('neuralHubChatHistory') || '[]'
+);
+  
+function openChat(id){
+  const chat = chats.find(c => c.id === id);
+  if(!chat) return;
+
+  activeChatId = id;
+  chatHistory = [...chat.messages];
+
+  localStorage.setItem(
+    'neuralHubChatHistory',
+    JSON.stringify(chatHistory)
+  );
+
+  saveChats();
+  renderChatList();
+  renderMessages();
+}
+
+function deleteChat(id){
+  chats = chats.filter(c => c.id !== id);
+
+  if(activeChatId === id){
+    activeChatId = null;
+    chatHistory = [];
+    localStorage.removeItem('neuralHubChatHistory');
+
+    if(chats.length > 0){
+      openChat(chats[0].id);
+      return;
+    }
   }
+
+  saveChats();
+  renderChatList();
+  renderMessages();
+}
+
+function renderMessages(){
+  const box = document.getElementById('chatbox');
+  if(!box) return;
+
+  box.innerHTML = '';
+
+  if(chatHistory.length === 0){
+    const welcome = document.createElement('div');
+    welcome.className = 'msg bot';
+    welcome.textContent = 'שלום! ברוך הבא ל־NEURAL HUB. איך אפשר לעזור?';
+    box.appendChild(welcome);
+    return;
+  }
+
+  chatHistory.forEach(message => {
+    const item = document.createElement('div');
+    item.className = 'msg ' +
+      (message.role === 'user' ? 'user' : 'bot');
+    item.textContent = message.text;
+    box.appendChild(item);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+  function renderChatList(){
+  const list = document.getElementById('chatList');
+  if(!list) return;
+
+  list.innerHTML = '';
+
+  chats.forEach(chat => {
+    const item = document.createElement('div');
+    item.className = 'chat-list-item';
+
+    const title = document.createElement('span');
+    title.textContent = chat.title;
+    title.onclick = () => openChat(chat.id);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '✕';
+    deleteBtn.onclick = (event) => {
+      event.stopPropagation();
+      deleteChat(chat.id);
+    };
+
+    item.appendChild(title);
+    item.appendChild(deleteBtn);
+    list.appendChild(item);
+  });
+}
+  function saveChats(){
+  localStorage.setItem(
+    'neuralHubChats',
+    JSON.stringify(chats)
+  );
+
+  localStorage.setItem(
+    'neuralHubActiveChatId',
+    activeChatId || ''
+  );
+}
+
+function createChat(){
+  const chat = {
+    id: Date.now().toString(),
+    title: 'New Chat',
+    messages: []
+  };
+
+  chats.unshift(chat);
+  activeChatId = chat.id;
+  chatHistory = [];
+
+  localStorage.removeItem('neuralHubChatHistory');
+
+  saveChats();
+  renderChatList();
+  renderMessages();
+}
+function newChat(){
+  createChat();
+}
 
   chatHistory = [];
   localStorage.removeItem('neuralHubChatHistory');
@@ -242,8 +401,38 @@ async function sendChat(){
       {role: 'model', text: answer}
     );
 
-    chatHistory = chatHistory.slice(-12);
-    localStorage.setItem('neuralHubChatHistory', JSON.stringify(chatHistory));
+   
+chatHistory = chatHistory.slice(-12);
+
+localStorage.setItem(
+  'neuralHubChatHistory',
+  JSON.stringify(chatHistory)
+);
+
+let activeChat = chats.find(c => c.id === activeChatId);
+
+if (!activeChat) {
+  activeChat = {
+    id: Date.now().toString(),
+    title: t.slice(0, 30),
+    messages: []
+  };
+
+  chats.unshift(activeChat);
+  activeChatId = activeChat.id;
+}
+
+const firstUserMessage = chatHistory.find(m => m.role === 'user');
+
+activeChat.title = firstUserMessage
+  ? firstUserMessage.text.slice(0, 30)
+  : 'New Chat';
+
+activeChat.messages = [...chatHistory];
+
+saveChats();
+renderChatList();
+
 
   } catch(error) {
     loading.textContent = 'Connection error. Please try again.';
