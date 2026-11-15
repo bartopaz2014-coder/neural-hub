@@ -461,6 +461,47 @@ if(!t){document.getElementById('creatorResult').textContent='Please enter a topi
 document.getElementById('creatorResult').textContent=
 'Creative prompt:\n\nCreate a detailed, cinematic scene of '+t+'. Use dramatic lighting, rich atmosphere, beautiful composition, detailed textures and professional visual storytelling.';
 }
+  
+function initializeChats(){
+  const activeChat = chats.find(
+    chat => chat.id === activeChatId
+  );
+
+  if(activeChat){
+    chatHistory = [...activeChat.messages];
+  } else if(chatHistory.length > 0){
+    const firstMessage = chatHistory.find(
+      message => message.role === 'user'
+    );
+
+    const newSavedChat = {
+      id: Date.now().toString(),
+      title: firstMessage
+        ? firstMessage.text.slice(0, 30)
+        : 'Previous Chat',
+      messages: [...chatHistory]
+    };
+
+    chats.unshift(newSavedChat);
+    activeChatId = newSavedChat.id;
+  } else {
+    chatHistory = [];
+    activeChatId = null;
+  }
+
+  saveChats();
+
+  localStorage.setItem(
+    'neuralHubChatHistory',
+    JSON.stringify(chatHistory)
+  );
+
+  renderChatList();
+  renderMessages();
+}
+
+initializeChats();
+
 </script>
 </body>
 </html>
