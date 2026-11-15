@@ -41,6 +41,18 @@ textarea{min-height:100px;resize:vertical}
 footer{text-align:center;color:#737b9c;padding:40px}
 .small{font-size:12px;color:#858daa}
 button:hover{opacity:.85}
+  .new-chat-btn{
+  display:inline-block;
+  background:#a995ff;
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:13px 20px;
+  margin-bottom:12px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
 @media(max-width:550px){header{padding:0 15px}.logo{font-size:18px}.chatinput{flex-direction:column}}
 </style>
 </head>
@@ -81,7 +93,7 @@ button:hover{opacity:.85}
 <button class="back" onclick="goHome()">← Back to Home</button>
 <div class="toolhead"><h1>🤖 <span>AI Chat</span></h1><p>Talk with the NEURAL HUB demo assistant.</p></div>
 <div class="panel">
-  <button class="btn" onclick="newChat()" style="margin-bottom:12px;">
+<button class="new-chat-btn" onclick="newChat()">
   + New Chat
 </button>
 <div class="chatbox" id="chatbox">
