@@ -81,6 +81,9 @@ button:hover{opacity:.85}
 <button class="back" onclick="goHome()">← Back to Home</button>
 <div class="toolhead"><h1>🤖 <span>AI Chat</span></h1><p>Talk with the NEURAL HUB demo assistant.</p></div>
 <div class="panel">
+  <button class="btn" onclick="newChat()" style="margin-bottom:12px;">
+  + New Chat
+</button>
 <div class="chatbox" id="chatbox">
 <div class="msg bot">Hello! Welcome to NEURAL HUB. What would you like to explore?</div>
 </div>
@@ -167,7 +170,25 @@ return 'Thanks for your message! This is the NEURAL HUB free demo assistant. My 
 
 
 let chatHistory = JSON.parse(localStorage.getItem('neuralHubChatHistory') || '[]');
+function newChat(){
+  if(chatHistory.length > 0){
+    localStorage.setItem(
+      'neuralHubPreviousChat',
+      JSON.stringify(chatHistory)
+    );
+  }
 
+  chatHistory = [];
+  localStorage.removeItem('neuralHubChatHistory');
+
+  let chatbox = document.getElementById('chatbox');
+
+  chatbox.innerHTML = `
+    <div class="msg bot">
+      Hello! Welcome to NEURAL HUB. What would you like to explore?
+    </div>
+  `;
+}
 async function sendChat(){
   let input = document.getElementById('chatinput');
   let t = input.value.trim();
